@@ -9,16 +9,23 @@ bool C_TETRIS_GAME::boInputHandler(E_DIRECTIONS eDir, bool boButton0, bool boBut
     case eDIRLeft:
         boTryMove(eLeft);
         break;
-
     case eDIRRight:
         boTryMove(eRight);
         break;
-    
+    case eDIRDown:
+        if (boJustPlaced == false){
+            boTryMove(eDown);
+        }
+        break;
     default:
         break;
     }
     if(boButton0){
         boTryMove(eRotate);
+    }
+    else if(boButton1)
+    {
+        boTryMove(eRotateL);
     }
     vShow();
     
@@ -43,6 +50,7 @@ void C_TETRIS_GAME::vGameLoop(){
         else{
             u16LoopCounter = EXECUTION_FREQUENCY / 10;
         }
+        boJustPlaced = false;
         boTryMove(eDown);
         vShow();
     }
@@ -132,9 +140,7 @@ void C_TETRIS_GAME::vPlace(){
   bool boFullRow;
   uint32_t u32Color;
   uint8_t u8DeletedRows = 0;
-  for(uint8_t i=0;i<4;i++){
-    //PosY ellenörzések, ha felfelé kilóg: game over
-    
+  for(uint8_t i=0;i<4;i++){    
     if((acShapes[u8FP_ShapeId].au8Look[u8FP_Orientation*2  ] & (0x80 >> i)) != 0){
       if(boSetLed(u8FP_PosX+i-1,u8FP_PosY-2,(uint32_t)acShapes[u8FP_ShapeId].eColor) == false){
           vGameOver();
@@ -188,6 +194,8 @@ void C_TETRIS_GAME::vPlace(){
   u8AllDeletedRows += u8DeletedRows;
   u8Level = u8AllDeletedRows / 10;
   vNewPiece();
+  boJustPlaced = true;
+  u8LoopCounter = EXECUTION_FREQUENCY * (48-5*u8Level) / 60;
 }
 void C_TETRIS_GAME::vNewPiece(){
     random();
