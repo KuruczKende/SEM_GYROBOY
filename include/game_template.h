@@ -2,18 +2,11 @@
 #define GAME_TEMPLATE_H
 
 #include <Arduino.h>
+#include "input_template.h"
 
 #define EXECUTION_FREQUENCY (100)
 #define EXECUTION_PERIOD_MS (1000 / EXECUTION_FREQUENCY)
 #define EXECUTION_PERIOD_US (1000000 / EXECUTION_FREQUENCY)
-
-enum E_DIRECTIONS{
-    eDIRUp = 0,
-    eDIRDown,
-    eDIRLeft,
-    eDIRRight,
-    eDIRNone
-};
 
 class C_GAME{
 protected:

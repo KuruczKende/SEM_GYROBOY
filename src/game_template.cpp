@@ -61,6 +61,6 @@ void C_GAME::vClearLed(){
     FastLED.clear(true);
 }
 
-bool boInitLeds(const uint8_t u8Pin){
-    FastLED.addLeds<NEOPIXEL,5>(leds, 200);
+bool boInitLeds(){
+    FastLED.addLeds<NEOPIXEL,6>(leds, 200);
 }

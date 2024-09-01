@@ -51,6 +51,7 @@ uint16_t u16Score;
 uint8_t u8Level;
 uint8_t u8AllDeletedRows;
 uint16_t u16LoopCounter;
+bool boJustPlaced;
 
 bool boTryMove (E_ACK eAction);
 bool boFit(uint8_t u8PosX, uint8_t u8PosY, uint8_t u8LookU, uint8_t u8LookB);

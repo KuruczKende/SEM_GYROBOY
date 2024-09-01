@@ -195,15 +195,9 @@ void C_TETRIS_GAME::vPlace(){
   u8Level = u8AllDeletedRows / 10;
   vNewPiece();
   boJustPlaced = true;
-  u8LoopCounter = EXECUTION_FREQUENCY * (48-5*u8Level) / 60;
+  u16LoopCounter = EXECUTION_FREQUENCY * (48-5*u8Level) / 60;
 }
 void C_TETRIS_GAME::vNewPiece(){
-    random();
-    random();
-    random();
-    random();
-    random();
-    random();
     u8FP_ShapeId = random(7);
     u8FP_Orientation = random(4);
     Serial.println("id: "+String(u8FP_ShapeId)+" dir: "+String(u8FP_Orientation));

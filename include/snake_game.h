@@ -9,12 +9,13 @@ private:
 struct C_POS{
     uint8_t u8PosX;
     uint8_t u8PosY;
-}
+};
 C_POS* pcBuffer;
 uint8_t u8HeadIdx;
 uint8_t u8Length;
 C_POS cApple;
 E_DIRECTIONS eDir;
+uint16_t u16LoopCounter;
 
 void vMakeBuffer();
 void vPlaceApple();
