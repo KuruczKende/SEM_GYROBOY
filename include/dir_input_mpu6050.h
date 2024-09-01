@@ -1,18 +1,20 @@
+#ifndef DIR_INPUT_MPU6050
+#define DIR_INPUT_MPU6050
 
-#include "I2Cdev.h"
-#include "MPU6050.h"
-
-#include "Wire.h"
-
-MPU6050 accelgyro;
-//MPU6050 accelgyro(0x69); // <-- use for AD0 high
-
-int16_t ax, ay, az;
-int16_t gx, gy, gz;
-void setup() {
-    Wire.begin();
+class C_DIR_INPUT_MPU6050: public C_DIRECTION_INPUT{
+private:
+    MPU6050 accelgyro;
+    int16_t s16Ox, s16Oy, s16Oz; // offsets / starting pos
+    int16_t s16Ax, s16Ay, s16Az;
+    int16_t s16Gx, s16Gy, s16Gz;
+    uint32_t u32LastTime;
+public:
+    C_DIR_INPUT_MPU6050(){};
+    ~C_DIR_INPUT_MPU6050(){};
+    void vInputInit();
+    void vInputLoop();
+    E_DIRECTIONS eGetDirection(bool* pboSend);
 }
 
-void loop() {
-    accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-}
+
+#endif
