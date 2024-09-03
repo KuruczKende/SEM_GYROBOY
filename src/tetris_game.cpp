@@ -1,8 +1,6 @@
 #include "tetris_game.h"
 #include <Arduino.h>
 
-C_TETRIS_GAME::C_TETRIS_GAME(){}
-C_TETRIS_GAME::~C_TETRIS_GAME(){}
 bool C_TETRIS_GAME::boInputHandler(E_DIRECTIONS eDir, bool boButton0, bool boButton1){
     switch (eDir)
     {
@@ -21,7 +19,7 @@ bool C_TETRIS_GAME::boInputHandler(E_DIRECTIONS eDir, bool boButton0, bool boBut
         break;
     }
     if(boButton0){
-        boTryMove(eRotate);
+        boTryMove(eRotateR);
     }
     else if(boButton1)
     {
@@ -88,11 +86,47 @@ bool C_TETRIS_GAME::boTryMove (E_ACK eAction){
         u8FP_Orientation=(u8FP_Orientation+3)%4;
         boRet = true;
       }
+      else if (boPenetrateSide(u8FP_PosX,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+6)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+7)%8])){
+        Serial.println("side " + String(u8FP_PosX));
+        if((u8FP_PosX == 0) && (boFit(u8FP_PosX + 1,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+6)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+7)%8]))){
+            u8FP_PosX++;
+            u8FP_Orientation=(u8FP_Orientation+3)%4;
+            boRet = true;
+        }
+        else if((u8FP_PosX >= 8) && (boFit(u8FP_PosX - 1,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+6)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+7)%8]))){
+            u8FP_PosX--;
+            u8FP_Orientation=(u8FP_Orientation+3)%4;
+            boRet = true;
+        }
+        else if((u8FP_PosX == 9) && (boFit(u8FP_PosX - 2,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+6)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+7)%8]))){
+            u8FP_PosX-=2;
+            u8FP_Orientation=(u8FP_Orientation+3)%4;
+            boRet = true;
+        }
+      }
       break;
     case eRotateR:
       if(boFit(u8FP_PosX,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+2)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+3)%8])){
         u8FP_Orientation=(u8FP_Orientation+1)%4;
         boRet = true;
+      }
+      else if (boPenetrateSide(u8FP_PosX,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+2)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+3)%8])){
+        Serial.println("side " + String(u8FP_PosX));
+        if((u8FP_PosX == 0) && (boFit(u8FP_PosX + 1,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+2)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+3)%8]))){
+            u8FP_PosX++;
+            u8FP_Orientation=(u8FP_Orientation+1)%4;
+            boRet = true;
+        }
+        else if((u8FP_PosX >= 8) && (boFit(u8FP_PosX - 1,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+2)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+3)%8]))){
+            u8FP_PosX--;
+            u8FP_Orientation=(u8FP_Orientation+1)%4;
+            boRet = true;
+        }
+        else if((u8FP_PosX == 9) && (boFit(u8FP_PosX - 2,u8FP_PosY,acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+2)%8],acShapes[u8FP_ShapeId].au8Look[(u8FP_Orientation*2+3)%8]))){
+            u8FP_PosX-=2;
+            u8FP_Orientation=(u8FP_Orientation+1)%4;
+            boRet = true;
+        }
       }
       break;
     case eNone:
@@ -105,19 +139,26 @@ bool C_TETRIS_GAME::boTryMove (E_ACK eAction){
   }
   return boRet;
 }
+bool C_TETRIS_GAME::boPenetrateSide(uint8_t u8PosX, uint8_t u8PosY, uint8_t u8LookU, uint8_t u8LookB){
+  bool boRet = false;
+  if((u8PosX == 0) && (((u8LookU & 0x88) | (u8LookB & 0x88)) != 0)){
+    // the form protrudes to the left
+    boRet = true;
+  }
+  if(((u8PosX == 9) && (((u8LookU & 0x33) | (u8LookB & 0x33)) != 0)) ||
+     ((u8PosX == 8) && (((u8LookU & 0x11) | (u8LookB & 0x11)) != 0))){
+    // the form protrudes to the right
+    boRet = true;
+  }
+  return boRet;
+}
 bool C_TETRIS_GAME::boFit(uint8_t u8PosX, uint8_t u8PosY, uint8_t u8LookU, uint8_t u8LookB){
   bool boRet = true;
   if(((uint8_t)(u8PosX + 1) == 0) || u8PosX == 10){
     // not valid X position
     boRet = false;
   }
-  if((u8PosX == 0) && (((u8LookU & 0x88) | (u8LookB & 0x88)) != 0)){
-    // the form protrudes to the left
-    boRet = false;
-  }
-  if(((u8PosX == 9) && (((u8LookU & 0x33) | (u8LookB & 0x33)) != 0)) ||
-     ((u8PosX == 8) && (((u8LookU & 0x11) | (u8LookB & 0x11)) != 0))){
-    // the form protrudes to the right
+  if(boPenetrateSide(u8PosX,u8PosY,u8LookU,u8LookB) == true){
     boRet = false;
   }
   if((u8PosY == 20) || ((u8PosY == 19) && ((u8LookB & 0x0F) != 0))){

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "input_template.h"
 
-#define EXECUTION_FREQUENCY (100)
+#define EXECUTION_FREQUENCY (10000)
 #define EXECUTION_PERIOD_MS (1000 / EXECUTION_FREQUENCY)
 #define EXECUTION_PERIOD_US (1000000 / EXECUTION_FREQUENCY)
 
@@ -27,6 +27,6 @@ public:
     virtual void vGameLoop() = 0;
 };
 
-bool boInitLeds(const uint8_t u8Pin);
+bool boInitLeds();
 
 #endif

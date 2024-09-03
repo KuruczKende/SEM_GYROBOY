@@ -20,6 +20,12 @@ bool C_GAME::boSetLed(uint8_t u8PosX, uint8_t u8PosY, uint32_t u32Color){
     }
     return boRet;
 }
+bool C_GAME::boSetLedHSV(uint8_t u8PosX, uint8_t u8PosY, uint8_t u8Hue, uint8_t u8Sat, uint8_t u8Val){
+    CHSV color = CHSV(u8Hue, u8Sat, u8Val);
+    uint8_t* pu8Color = CRGB(color).raw;
+    return boSetLed(u8PosX, u8PosY, pu8Color[0] << 16 | pu8Color[1] << 8 | pu8Color[2]);
+}
+
 
 bool C_GAME::boGetLed(uint8_t u8PosX, uint8_t u8PosY, uint32_t *pu32Color){
     bool boRet = true;

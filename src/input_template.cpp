@@ -48,7 +48,7 @@ void C_INPUT_MANAGER::vInputLoop(){
         }
     }
 
-    if(boSendInput && fpvInputHandler != NULL){
-        fpvInputHandler(eDir,boButton0,boButton1);
+    if(boSendInput && fpboInputHandler != NULL){
+        fpboInputHandler(eDir,boButton0,boButton1);
     }
 }

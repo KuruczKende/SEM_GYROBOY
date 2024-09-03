@@ -8,13 +8,13 @@ class C_TETRIS_GAME : public C_GAME
 private:
 enum E_COLOR{
   eBlack = 0x000000,
-  eRed = 0xFF0000,
-  eGreen = 0x00FF00,
-  eBlue = 0x0000FF,
-  eOrange = 0xFF8800,
-  eYellow = 0xFFFF00,
-  ePurple = 0xFF00FF,
-  eCyan = 0x00FFFF,
+  eRed = 0x220000,
+  eGreen = 0x002200,
+  eBlue = 0x000022,
+  eOrange = 0x220600,
+  eYellow = 0x221000,
+  ePurple = 0x220022,
+  eCyan = 0x002222,
 };
 
 enum E_ACK{
@@ -54,6 +54,7 @@ uint16_t u16LoopCounter;
 bool boJustPlaced;
 
 bool boTryMove (E_ACK eAction);
+bool boPenetrateSide(uint8_t u8PosX, uint8_t u8PosY, uint8_t u8LookU, uint8_t u8LookB);
 bool boFit(uint8_t u8PosX, uint8_t u8PosY, uint8_t u8LookU, uint8_t u8LookB);
 void vPlace();
 void vNewPiece();
@@ -61,8 +62,8 @@ void vShow();
 void vGameOver();
 
 public:
-    C_TETRIS_GAME();
-    ~C_TETRIS_GAME();
+    C_TETRIS_GAME(){};
+    ~C_TETRIS_GAME(){};
     bool boInputHandler(E_DIRECTIONS eDir, bool boButton0, bool boButton1);
     void vGameInit();
     void vGameLoop();

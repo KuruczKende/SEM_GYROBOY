@@ -15,7 +15,8 @@ uint8_t u8HeadIdx;
 uint8_t u8Length;
 C_POS cApple;
 E_DIRECTIONS eDir;
-uint16_t u16LoopCounter;
+uint16_t u32LoopCounter;
+uint16_t u16Offset;
 
 void vMakeBuffer();
 void vPlaceApple();
